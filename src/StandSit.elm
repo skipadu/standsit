@@ -1,12 +1,23 @@
-module StandSit exposing (main, view)
+module StandSit exposing (Msg(..), Pose(..), main, view)
 
-import Html exposing (div, span, text)
+import Html exposing (button, div, span, text)
 import Html.Attributes as Attr
+import Html.Events exposing (onClick)
+
+
+type Pose
+    = Stand
+
+
+type Msg
+    = ClickedPose Pose
 
 
 view =
     div []
-        [ span [ Attr.id "timeText" ] [ text "--:--" ] ]
+        [ button [ Attr.id "startStanding", onClick (ClickedPose Stand) ] [ text "Stand" ]
+        , span [ Attr.id "timeText" ] [ text "--:--" ]
+        ]
 
 
 main =
