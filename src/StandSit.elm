@@ -1,6 +1,6 @@
 module StandSit exposing (main, view)
 
-import Html exposing (Html, div, h1, p, span, text)
+import Html exposing (div, span, text)
 import Html.Attributes as Attr
 
 

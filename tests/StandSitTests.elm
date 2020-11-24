@@ -2,7 +2,7 @@ module StandSitTests exposing (initialTimeText, testChecker)
 
 import Expect
 import StandSit exposing (view)
-import Test exposing (Test, describe, test)
+import Test exposing (Test, test)
 import Test.Html.Query as Query
 import Test.Html.Selector as Selector
 
