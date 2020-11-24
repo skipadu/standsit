@@ -1,16 +1,13 @@
-module StandSit exposing (main)
+module StandSit exposing (main, view)
 
-import Html exposing (div, h1, p, text)
+import Html exposing (Html, div, h1, p, span, text)
+import Html.Attributes as Attr
 
 
-view model =
+view =
     div []
-        [ h1 [] [ text "StandSit" ]
-        , div []
-            [ p [] [ text "Content here" ]
-            ]
-        ]
+        [ span [ Attr.id "timeText" ] [ text "--:--" ] ]
 
 
 main =
-    view "beginning without model"
+    view
