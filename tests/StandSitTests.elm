@@ -30,22 +30,22 @@ initialTimeText =
 
 standingTimeText : Test
 standingTimeText =
-    test "Time is changed to 15:00 in model after Stand message" <|
+    test "Time is changed to 15:00 (900 seconds) in model after Stand message" <|
         \_ ->
             initialModel
                 |> update (ClickedPose Stand)
-                |> .timeString
-                |> Expect.equal "15:00"
+                |> .timeValue
+                |> Expect.equal 900
 
 
 sittingTimeText : Test
 sittingTimeText =
-    test "Time is changed to 45:00 in model after Sit message" <|
+    test "Time is changed to 45:00 (2700 seconds) in model after Sit message" <|
         \_ ->
             initialModel
                 |> update (ClickedPose Sit)
-                |> .timeString
-                |> Expect.equal "45:00"
+                |> .timeValue
+                |> Expect.equal 2700
 
 
 startStandingClicked : Test

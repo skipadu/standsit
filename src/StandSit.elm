@@ -21,22 +21,48 @@ padLeadingZero value =
     padLeft 2 '0' (String.fromInt value)
 
 
+currentTimeText : Int -> Html Msg
+currentTimeText seconds =
+    let
+        minutes =
+            (seconds |> toFloat)
+                / 60
+                |> floor
+                |> padLeadingZero
+
+        remainingSeconds =
+            seconds
+                |> remainderBy 60
+                |> padLeadingZero
+
+        timeText =
+            if seconds == 0 then
+                "--:--"
+
+            else
+                minutes ++ ":" ++ remainingSeconds
+    in
+    span [ Attr.id "timeText" ] [ text timeText ]
+
+
 view : Model -> Html Msg
 view model =
     div []
         [ button [ Attr.id "startStanding", onClick (ClickedPose Stand) ] [ text "Stand" ]
-        , span [ Attr.id "timeText" ] [ text model.timeString ]
+        , currentTimeText model.timeValue
         , button [ Attr.id "startSitting", onClick (ClickedPose Sit) ] [ text "Sit" ]
         ]
 
 
 type alias Model =
-    { timeString : String }
+    { timeValue : Int
+    }
 
 
 initialModel : Model
 initialModel =
-    { timeString = "--:--" }
+    { timeValue = 0
+    }
 
 
 update : Msg -> Model -> Model
@@ -45,10 +71,10 @@ update msg model =
         ClickedPose pose ->
             case pose of
                 Stand ->
-                    { model | timeString = "15:00" }
+                    { model | timeValue = 15 * 60 }
 
                 Sit ->
-                    { model | timeString = "45:00" }
+                    { model | timeValue = 45 * 60 }
 
 
 main : Program () Model Msg
