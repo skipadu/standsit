@@ -1,7 +1,7 @@
-module StandSitTests exposing (initialTimeText, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker)
+module StandSitTests exposing (initialTimeText, padLeadingZeros, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker)
 
 import Expect
-import StandSit exposing (Model, Msg(..), Pose(..), initialModel, update, view)
+import StandSit exposing (Model, Msg(..), Pose(..), initialModel, padLeadingZero, update, view)
 import Test exposing (Test, test)
 import Test.Html.Event as Event
 import Test.Html.Query as Query
@@ -70,3 +70,11 @@ startSittingClicked =
                 |> Query.find [ Selector.id "startSitting" ]
                 |> Event.simulate Event.click
                 |> Event.expect (ClickedPose Sit)
+
+
+padLeadingZeros : Test
+padLeadingZeros =
+    test "Zero are padded correctly" <|
+        \_ ->
+            padLeadingZero 5
+                |> Expect.equal "05"

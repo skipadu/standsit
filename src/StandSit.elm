@@ -1,9 +1,10 @@
-module StandSit exposing (Model, Msg(..), Pose(..), initialModel, main, update, view)
+module StandSit exposing (Model, Msg(..), Pose(..), initialModel, main, padLeadingZero, update, view)
 
 import Browser
 import Html exposing (Html, button, div, span, text)
 import Html.Attributes as Attr
 import Html.Events exposing (onClick)
+import String exposing (padLeft)
 
 
 type Pose
@@ -13,6 +14,11 @@ type Pose
 
 type Msg
     = ClickedPose Pose
+
+
+padLeadingZero : Int -> String
+padLeadingZero value =
+    padLeft 2 '0' (String.fromInt value)
 
 
 view : Model -> Html Msg
