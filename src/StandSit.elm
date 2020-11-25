@@ -8,6 +8,7 @@ import Html.Events exposing (onClick)
 
 type Pose
     = Stand
+    | Sit
 
 
 type Msg
@@ -19,6 +20,7 @@ view model =
     div []
         [ button [ Attr.id "startStanding", onClick (ClickedPose Stand) ] [ text "Stand" ]
         , span [ Attr.id "timeText" ] [ text model.timeString ]
+        , button [ Attr.id "startSitting", onClick (ClickedPose Sit) ] [ text "Sit" ]
         ]
 
 
@@ -35,7 +37,12 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         ClickedPose pose ->
-            { model | timeString = "15:00" }
+            case pose of
+                Stand ->
+                    { model | timeString = "15:00" }
+
+                Sit ->
+                    { model | timeString = "45:00" }
 
 
 main : Program () Model Msg

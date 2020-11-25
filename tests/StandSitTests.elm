@@ -1,4 +1,4 @@
-module StandSitTests exposing (initialTimeText, standingTimeText, startStandingClicked, testChecker)
+module StandSitTests exposing (initialTimeText, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker)
 
 import Expect
 import StandSit exposing (Model, Msg(..), Pose(..), initialModel, update, view)
@@ -38,9 +38,19 @@ standingTimeText =
                 |> Expect.equal "15:00"
 
 
+sittingTimeText : Test
+sittingTimeText =
+    test "Time is changed to 45:00 in model after Sit message" <|
+        \_ ->
+            initialModel
+                |> update (ClickedPose Sit)
+                |> .timeString
+                |> Expect.equal "45:00"
+
+
 startStandingClicked : Test
 startStandingClicked =
-    test "Correct pose event called" <|
+    test "Standing pose event called" <|
         \() ->
             initialModel
                 |> view
@@ -48,3 +58,15 @@ startStandingClicked =
                 |> Query.find [ Selector.id "startStanding" ]
                 |> Event.simulate Event.click
                 |> Event.expect (ClickedPose Stand)
+
+
+startSittingClicked : Test
+startSittingClicked =
+    test "Sitting pose event called" <|
+        \() ->
+            initialModel
+                |> view
+                |> Query.fromHtml
+                |> Query.find [ Selector.id "startSitting" ]
+                |> Event.simulate Event.click
+                |> Event.expect (ClickedPose Sit)
