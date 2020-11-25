@@ -34,10 +34,8 @@ standingTimeText =
         \_ ->
             initialModel
                 |> update (ClickedPose Stand)
-                |> view
-                |> Query.fromHtml
-                |> Query.find [ Selector.id "timeText" ]
-                |> Query.has [ Selector.text "15:00" ]
+                |> .timeString
+                |> Expect.equal "15:00"
 
 
 startStandingClicked : Test
