@@ -1,7 +1,7 @@
-module StandSitTests exposing (initialTimeText, startStandingClicked, testChecker)
+module StandSitTests exposing (initialTimeText, standingTimeText, startStandingClicked, testChecker)
 
 import Expect
-import StandSit exposing (Msg(..), Pose(..), view)
+import StandSit exposing (Model, Msg(..), Pose(..), initialModel, update, view)
 import Test exposing (Test, test)
 import Test.Html.Event as Event
 import Test.Html.Query as Query
@@ -21,17 +21,31 @@ initialTimeText : Test
 initialTimeText =
     test "At first, the time is --:--" <|
         \() ->
-            view
+            initialModel
+                |> view
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "timeText" ]
                 |> Query.has [ Selector.text "--:--" ]
+
+
+standingTimeText : Test
+standingTimeText =
+    test "Time is changed to 15:00 in model after Stand message" <|
+        \_ ->
+            initialModel
+                |> update (ClickedPose Stand)
+                |> view
+                |> Query.fromHtml
+                |> Query.find [ Selector.id "timeText" ]
+                |> Query.has [ Selector.text "15:00" ]
 
 
 startStandingClicked : Test
 startStandingClicked =
     test "Correct pose event called" <|
         \() ->
-            view
+            initialModel
+                |> view
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startStanding" ]
                 |> Event.simulate Event.click
