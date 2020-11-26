@@ -1,4 +1,4 @@
-module StandSitTests exposing (changingPoseUpdatesModel, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker)
+module StandSitTests exposing (changingPoses, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker)
 
 import Expect
 import StandSit exposing (Model, Msg(..), Pose(..), initialModel, padLeadingZero, update, view)
@@ -110,11 +110,12 @@ sitButtonCssClasses =
                 |> Query.has [ Selector.classes [ "btn", "btn-pose" ] ]
 
 
-changingPoseUpdatesModel : Test
-changingPoseUpdatesModel =
+changingPoses : Test
+changingPoses =
     describe "Changing poses will update the model"
         [ changePoseToStand
         , changePoseToSit
+        , currentPoseButtonHasCssClass
         ]
 
 
@@ -136,3 +137,35 @@ changePoseToSit =
                 |> update (ClickedPose Sit)
                 |> .currentPose
                 |> Expect.equal Sit
+
+
+currentPoseButtonHasCssClass : Test
+currentPoseButtonHasCssClass =
+    describe "Pose button which is current one, has wanted CSS class"
+        [ standButtonHasCssClassWhenCurrent
+        , sitButtonHasCssClassWhenCurrent
+        ]
+
+
+standButtonHasCssClassWhenCurrent : Test
+standButtonHasCssClassWhenCurrent =
+    test "Stand button has the CSS class when it is current pose" <|
+        \_ ->
+            initialModel
+                |> update (ClickedPose Stand)
+                |> view
+                |> Query.fromHtml
+                |> Query.find [ Selector.id "startStanding" ]
+                |> Query.has [ Selector.class "current-pose" ]
+
+
+sitButtonHasCssClassWhenCurrent : Test
+sitButtonHasCssClassWhenCurrent =
+    test "Sit button has the CSS class when it is current pose" <|
+        \_ ->
+            initialModel
+                |> update (ClickedPose Sit)
+                |> view
+                |> Query.fromHtml
+                |> Query.find [ Selector.id "startSitting" ]
+                |> Query.has [ Selector.class "current-pose" ]
