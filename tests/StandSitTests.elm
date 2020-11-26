@@ -1,4 +1,4 @@
-module StandSitTests exposing (initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker)
+module StandSitTests exposing (changingPoseUpdatesModel, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker)
 
 import Expect
 import StandSit exposing (Model, Msg(..), Pose(..), initialModel, padLeadingZero, update, view)
@@ -108,3 +108,31 @@ sitButtonCssClasses =
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startSitting" ]
                 |> Query.has [ Selector.classes [ "btn", "btn-pose" ] ]
+
+
+changingPoseUpdatesModel : Test
+changingPoseUpdatesModel =
+    describe "Changing poses will update the model"
+        [ changePoseToStand
+        , changePoseToSit
+        ]
+
+
+changePoseToStand : Test
+changePoseToStand =
+    test "Pose is changed to Stand in model" <|
+        \_ ->
+            initialModel
+                |> update (ClickedPose Stand)
+                |> .currentPose
+                |> Expect.equal Stand
+
+
+changePoseToSit : Test
+changePoseToSit =
+    test "Pose is changed to Sit in model" <|
+        \_ ->
+            initialModel
+                |> update (ClickedPose Sit)
+                |> .currentPose
+                |> Expect.equal Sit

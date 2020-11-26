@@ -9,6 +9,7 @@ import String exposing (padLeft)
 
 type Pose
     = Stand
+    | Neutral
     | Sit
 
 
@@ -56,12 +57,14 @@ view model =
 
 type alias Model =
     { timeValue : Int
+    , currentPose : Pose
     }
 
 
 initialModel : Model
 initialModel =
     { timeValue = 0
+    , currentPose = Neutral
     }
 
 
@@ -71,10 +74,13 @@ update msg model =
         ClickedPose pose ->
             case pose of
                 Stand ->
-                    { model | timeValue = 15 * 60 }
+                    { model | timeValue = 15 * 60, currentPose = Stand }
+
+                Neutral ->
+                    { model | currentPose = Neutral }
 
                 Sit ->
-                    { model | timeValue = 45 * 60 }
+                    { model | timeValue = 45 * 60, currentPose = Sit }
 
 
 main : Program () Model Msg
