@@ -1,4 +1,4 @@
-module StandSitTests exposing (changingPoses, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker)
+module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker)
 
 import Expect
 import StandSit exposing (Model, Msg(..), Pose(..), initialModel, padLeadingZero, update, view)
@@ -15,6 +15,13 @@ testChecker =
 
 
 -- TODO: describe for gathering multiple tests related to timeText
+
+
+initialModelContents : Test
+initialModelContents =
+    test "Initial model is as expected" <|
+        \_ ->
+            Expect.equal initialModel { timeValue = 0, currentPose = Neutral }
 
 
 initialTimeText : Test
