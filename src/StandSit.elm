@@ -48,9 +48,9 @@ currentTimeText seconds =
 view : Model -> Html Msg
 view model =
     div []
-        [ button [ Attr.id "startStanding", onClick (ClickedPose Stand) ] [ text "Stand" ]
+        [ button [ Attr.id "startStanding", Attr.class "btn btn-pose", onClick (ClickedPose Stand) ] [ text "Stand" ]
         , currentTimeText model.timeValue
-        , button [ Attr.id "startSitting", onClick (ClickedPose Sit) ] [ text "Sit" ]
+        , button [ Attr.id "startSitting", Attr.class "btn btn-pose", onClick (ClickedPose Sit) ] [ text "Sit" ]
         ]
 
 

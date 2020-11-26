@@ -1,8 +1,8 @@
-module StandSitTests exposing (initialTimeText, padLeadingZeros, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker)
+module StandSitTests exposing (initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker)
 
 import Expect
 import StandSit exposing (Model, Msg(..), Pose(..), initialModel, padLeadingZero, update, view)
-import Test exposing (Test, test)
+import Test exposing (Test, describe, test)
 import Test.Html.Event as Event
 import Test.Html.Query as Query
 import Test.Html.Selector as Selector
@@ -78,3 +78,33 @@ padLeadingZeros =
         \_ ->
             padLeadingZero 5
                 |> Expect.equal "05"
+
+
+poseButtonCssClasses : Test
+poseButtonCssClasses =
+    describe "Pose buttons have correct CSS classes"
+        [ standButtonCssClasses
+        , sitButtonCssClasses
+        ]
+
+
+standButtonCssClasses : Test
+standButtonCssClasses =
+    test "Stand button has correct CSS classes" <|
+        \_ ->
+            initialModel
+                |> view
+                |> Query.fromHtml
+                |> Query.find [ Selector.id "startStanding" ]
+                |> Query.has [ Selector.classes [ "btn", "btn-pose" ] ]
+
+
+sitButtonCssClasses : Test
+sitButtonCssClasses =
+    test "Sit button has correct CSS classes" <|
+        \_ ->
+            initialModel
+                |> view
+                |> Query.fromHtml
+                |> Query.find [ Selector.id "startSitting" ]
+                |> Query.has [ Selector.classes [ "btn", "btn-pose" ] ]
