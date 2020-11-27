@@ -25,9 +25,22 @@ padLeadingZero value =
     padLeft 2 '0' (String.fromInt value)
 
 
-currentTimeText : Int -> Html Msg
-currentTimeText seconds =
+modeBasedTime : Model -> Int
+modeBasedTime model =
+    case model.timerMode of
+        Elapsed ->
+            model.timeElapsed
+
+        Remaining ->
+            model.timeValue - model.timeElapsed
+
+
+currentTimeText : Model -> Html Msg
+currentTimeText model =
     let
+        seconds =
+            modeBasedTime model
+
         minutes =
             (seconds |> toFloat)
                 / 60
@@ -40,7 +53,7 @@ currentTimeText seconds =
                 |> padLeadingZero
 
         timeText =
-            if seconds == 0 then
+            if seconds == 0 && model.timerState == Stopped then
                 "--:--"
 
             else
@@ -49,21 +62,11 @@ currentTimeText seconds =
     span [ Attr.id "timeText" ] [ text timeText ]
 
 
-modeBasedTime : Model -> Int
-modeBasedTime model =
-    case model.timerMode of
-        Elapsed ->
-            model.timeElapsed
-
-        Remaining ->
-            model.timeValue - model.timeElapsed
-
-
 view : Model -> Html Msg
 view model =
     div []
         [ button [ Attr.id "startStanding", Attr.class "btn btn-pose", Attr.classList [ ( "current-pose", model.currentPose == Stand ) ], onClick (ClickedPose Stand) ] [ text "Stand" ]
-        , currentTimeText (modeBasedTime model)
+        , currentTimeText model
         , button [ Attr.id "startSitting", Attr.class "btn btn-pose", Attr.classList [ ( "current-pose", model.currentPose == Sit ) ], onClick (ClickedPose Sit) ] [ text "Sit" ]
         ]
 
