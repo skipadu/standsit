@@ -200,7 +200,7 @@ timerStarts =
 
 timerModeChanged : Test
 timerModeChanged =
-    test "Timer mode is changed to Elapsed" <|
+    test "Timer mode is changed to Remaining from default Elapsed" <|
         \_ ->
             initialModel
                 |> update ClickedTimerModeToggle
