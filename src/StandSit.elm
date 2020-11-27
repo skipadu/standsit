@@ -112,7 +112,11 @@ update msg model =
                     ( { model | timeValue = 45 * 60, currentPose = Sit, timerState = Running, timeElapsed = 0 }, Cmd.none )
 
         Tick _ ->
-            ( { model | timeElapsed = model.timeElapsed + 1 }, Cmd.none )
+            if model.timeElapsed >= model.timeValue && model.timeValue > 0 then
+                ( { model | timerState = Stopped }, Cmd.none )
+
+            else
+                ( { model | timeElapsed = model.timeElapsed + 1 }, Cmd.none )
 
         ClickedTimerModeToggle ->
             let
