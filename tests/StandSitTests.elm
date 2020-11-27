@@ -1,7 +1,7 @@
 module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker, timerStarts)
 
 import Expect
-import StandSit exposing (Model, Msg(..), Pose(..), initialModel, padLeadingZero, update, view)
+import StandSit exposing (Msg(..), Pose(..), initialModel, padLeadingZero, update, view)
 import Test exposing (Test, describe, test)
 import Test.Html.Event as Event
 import Test.Html.Query as Query
@@ -12,10 +12,6 @@ import Time
 testChecker : Test
 testChecker =
     test "one plus two equals three" (\_ -> Expect.equal 3 (1 + 2))
-
-
-
--- TODO: describe for gathering multiple tests related to timeText
 
 
 initialModelContents : Test
