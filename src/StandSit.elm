@@ -80,7 +80,7 @@ view model =
         , div [ Attr.id "timer" ]
             [ currentTimeText model
             , div []
-                [ button [ Attr.id "toggleTimerMode" ] [ text "Timer mode" ]
+                [ button [ Attr.id "toggleTimerMode", onClick ClickedTimerModeToggle ] [ text "Timer mode" ]
                 , button [ Attr.id "toggleTimerState", onClick ClickedTimerStateToggle ] [ text (timerStateText model.timerState) ]
                 ]
             ]
