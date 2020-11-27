@@ -18,6 +18,7 @@ type Msg
     = ClickedPose Pose
     | Tick Time.Posix
     | ClickedTimerModeToggle
+    | ClickedTimerStateToggle
 
 
 padLeadingZero : Int -> String
@@ -62,11 +63,27 @@ currentTimeText model =
     span [ Attr.id "timeText" ] [ text timeText ]
 
 
+timerStateText : TimerState -> String
+timerStateText timerState =
+    case timerState of
+        Stopped ->
+            "Continue"
+
+        Running ->
+            "Stop"
+
+
 view : Model -> Html Msg
 view model =
     div []
         [ button [ Attr.id "startStanding", Attr.class "btn btn-pose", Attr.classList [ ( "current-pose", model.currentPose == Stand ) ], onClick (ClickedPose Stand) ] [ text "Stand" ]
-        , currentTimeText model
+        , div [ Attr.id "timer" ]
+            [ currentTimeText model
+            , div []
+                [ button [ Attr.id "toggleTimerMode" ] [ text "Timer mode" ]
+                , button [ Attr.id "toggleTimerState", onClick ClickedTimerStateToggle ] [ text (timerStateText model.timerState) ]
+                ]
+            ]
         , button [ Attr.id "startSitting", Attr.class "btn btn-pose", Attr.classList [ ( "current-pose", model.currentPose == Sit ) ], onClick (ClickedPose Sit) ] [ text "Sit" ]
         ]
 
@@ -132,6 +149,18 @@ update msg model =
                             Elapsed
             in
             ( { model | timerMode = newTimerMode }, Cmd.none )
+
+        ClickedTimerStateToggle ->
+            let
+                newTimerState =
+                    case model.timerState of
+                        Running ->
+                            Stopped
+
+                        Stopped ->
+                            Running
+            in
+            ( { model | timerState = newTimerState }, Cmd.none )
 
 
 main : Program () Model Msg

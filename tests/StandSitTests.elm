@@ -1,4 +1,4 @@
-module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker, timerStarts)
+module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker, timerModeChanged, timerStarts, timerStateChanged)
 
 import Expect
 import StandSit exposing (Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, padLeadingZero, update, view)
@@ -207,3 +207,14 @@ timerModeChanged =
                 |> Tuple.first
                 |> .timerMode
                 |> Expect.equal Remaining
+
+
+timerStateChanged : Test
+timerStateChanged =
+    test "Timer state is changed to Running from default Stopped" <|
+        \_ ->
+            initialModel
+                |> update ClickedTimerStateToggle
+                |> Tuple.first
+                |> .timerState
+                |> Expect.equal Running
