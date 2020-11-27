@@ -5,6 +5,7 @@ import Html exposing (Html, button, div, span, text)
 import Html.Attributes as Attr
 import Html.Events exposing (onClick)
 import String exposing (padLeft)
+import Time
 
 
 type Pose
@@ -15,6 +16,7 @@ type Pose
 
 type Msg
     = ClickedPose Pose
+    | Tick Time.Posix
 
 
 padLeadingZero : Int -> String
@@ -58,6 +60,7 @@ view model =
 type alias Model =
     { timeValue : Int
     , currentPose : Pose
+    , timeElapsed : Int
     }
 
 
@@ -65,28 +68,38 @@ initialModel : Model
 initialModel =
     { timeValue = 0
     , currentPose = Neutral
+    , timeElapsed = 0
     }
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ClickedPose pose ->
             case pose of
                 Stand ->
-                    { model | timeValue = 15 * 60, currentPose = Stand }
+                    ( { model | timeValue = 15 * 60, currentPose = Stand }, Cmd.none )
 
                 Neutral ->
-                    { model | currentPose = Neutral }
+                    ( { model | currentPose = Neutral }, Cmd.none )
 
                 Sit ->
-                    { model | timeValue = 45 * 60, currentPose = Sit }
+                    ( { model | timeValue = 45 * 60, currentPose = Sit }, Cmd.none )
+
+        Tick _ ->
+            ( { model | timeElapsed = model.timeElapsed + 1 }, Cmd.none )
 
 
 main : Program () Model Msg
 main =
-    Browser.sandbox
-        { init = initialModel
+    Browser.element
+        { init = \_ -> ( initialModel, Cmd.none )
         , view = view
         , update = update
+        , subscriptions = subscriptions
         }
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Time.every 1000 Tick

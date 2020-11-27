@@ -1,4 +1,4 @@
-module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker)
+module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker, timerStarts)
 
 import Expect
 import StandSit exposing (Model, Msg(..), Pose(..), initialModel, padLeadingZero, update, view)
@@ -6,6 +6,7 @@ import Test exposing (Test, describe, test)
 import Test.Html.Event as Event
 import Test.Html.Query as Query
 import Test.Html.Selector as Selector
+import Time
 
 
 testChecker : Test
@@ -21,7 +22,7 @@ initialModelContents : Test
 initialModelContents =
     test "Initial model is as expected" <|
         \_ ->
-            Expect.equal initialModel { timeValue = 0, currentPose = Neutral }
+            Expect.equal initialModel { timeValue = 0, currentPose = Neutral, timeElapsed = 0 }
 
 
 initialTimeText : Test
@@ -41,6 +42,7 @@ standingTimeText =
         \_ ->
             initialModel
                 |> update (ClickedPose Stand)
+                |> Tuple.first
                 |> .timeValue
                 |> Expect.equal 900
 
@@ -51,6 +53,7 @@ sittingTimeText =
         \_ ->
             initialModel
                 |> update (ClickedPose Sit)
+                |> Tuple.first
                 |> .timeValue
                 |> Expect.equal 2700
 
@@ -132,6 +135,7 @@ changePoseToStand =
         \_ ->
             initialModel
                 |> update (ClickedPose Stand)
+                |> Tuple.first
                 |> .currentPose
                 |> Expect.equal Stand
 
@@ -142,6 +146,7 @@ changePoseToSit =
         \_ ->
             initialModel
                 |> update (ClickedPose Sit)
+                |> Tuple.first
                 |> .currentPose
                 |> Expect.equal Sit
 
@@ -160,6 +165,7 @@ standButtonHasCssClassWhenCurrent =
         \_ ->
             initialModel
                 |> update (ClickedPose Stand)
+                |> Tuple.first
                 |> view
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startStanding" ]
@@ -172,7 +178,19 @@ sitButtonHasCssClassWhenCurrent =
         \_ ->
             initialModel
                 |> update (ClickedPose Sit)
+                |> Tuple.first
                 |> view
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startSitting" ]
                 |> Query.has [ Selector.class "current-pose" ]
+
+
+timerStarts : Test
+timerStarts =
+    test "Timer will start to tick" <|
+        \_ ->
+            initialModel
+                |> update (Tick (Time.millisToPosix 0))
+                |> Tuple.first
+                |> .timeElapsed
+                |> Expect.equal 1
