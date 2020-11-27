@@ -1,4 +1,4 @@
-module StandSit exposing (Model, Msg(..), Pose(..), initialModel, main, padLeadingZero, update, view)
+module StandSit exposing (Model, Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, main, padLeadingZero, update, view)
 
 import Browser
 import Html exposing (Html, button, div, span, text)
@@ -17,6 +17,7 @@ type Pose
 type Msg
     = ClickedPose Pose
     | Tick Time.Posix
+    | ClickedTimerModeToggle
 
 
 padLeadingZero : Int -> String
@@ -48,19 +49,41 @@ currentTimeText seconds =
     span [ Attr.id "timeText" ] [ text timeText ]
 
 
+modeBasedTime : Model -> Int
+modeBasedTime model =
+    case model.timerMode of
+        Elapsed ->
+            model.timeElapsed
+
+        Remaining ->
+            model.timeValue - model.timeElapsed
+
+
 view : Model -> Html Msg
 view model =
     div []
         [ button [ Attr.id "startStanding", Attr.class "btn btn-pose", Attr.classList [ ( "current-pose", model.currentPose == Stand ) ], onClick (ClickedPose Stand) ] [ text "Stand" ]
-        , currentTimeText model.timeValue
+        , currentTimeText (modeBasedTime model)
         , button [ Attr.id "startSitting", Attr.class "btn btn-pose", Attr.classList [ ( "current-pose", model.currentPose == Sit ) ], onClick (ClickedPose Sit) ] [ text "Sit" ]
         ]
+
+
+type TimerState
+    = Stopped
+    | Running
+
+
+type TimerMode
+    = Elapsed
+    | Remaining
 
 
 type alias Model =
     { timeValue : Int
     , currentPose : Pose
     , timeElapsed : Int
+    , timerState : TimerState
+    , timerMode : TimerMode
     }
 
 
@@ -69,6 +92,8 @@ initialModel =
     { timeValue = 0
     , currentPose = Neutral
     , timeElapsed = 0
+    , timerState = Stopped
+    , timerMode = Elapsed
     }
 
 
@@ -78,16 +103,28 @@ update msg model =
         ClickedPose pose ->
             case pose of
                 Stand ->
-                    ( { model | timeValue = 15 * 60, currentPose = Stand }, Cmd.none )
+                    ( { model | timeValue = 15 * 60, currentPose = Stand, timerState = Running, timeElapsed = 0 }, Cmd.none )
 
                 Neutral ->
-                    ( { model | currentPose = Neutral }, Cmd.none )
+                    ( { model | timeValue = 0, currentPose = Neutral, timerState = Stopped, timeElapsed = 0 }, Cmd.none )
 
                 Sit ->
-                    ( { model | timeValue = 45 * 60, currentPose = Sit }, Cmd.none )
+                    ( { model | timeValue = 45 * 60, currentPose = Sit, timerState = Running, timeElapsed = 0 }, Cmd.none )
 
         Tick _ ->
             ( { model | timeElapsed = model.timeElapsed + 1 }, Cmd.none )
+
+        ClickedTimerModeToggle ->
+            let
+                newTimerMode =
+                    case model.timerMode of
+                        Elapsed ->
+                            Remaining
+
+                        Remaining ->
+                            Elapsed
+            in
+            ( { model | timerMode = newTimerMode }, Cmd.none )
 
 
 main : Program () Model Msg
@@ -102,4 +139,8 @@ main =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Time.every 1000 Tick
+    if model.timerState == Stopped then
+        Sub.none
+
+    else
+        Time.every 1000 Tick

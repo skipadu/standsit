@@ -1,7 +1,7 @@
 module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker, timerStarts)
 
 import Expect
-import StandSit exposing (Msg(..), Pose(..), initialModel, padLeadingZero, update, view)
+import StandSit exposing (Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, padLeadingZero, update, view)
 import Test exposing (Test, describe, test)
 import Test.Html.Event as Event
 import Test.Html.Query as Query
@@ -18,7 +18,13 @@ initialModelContents : Test
 initialModelContents =
     test "Initial model is as expected" <|
         \_ ->
-            Expect.equal initialModel { timeValue = 0, currentPose = Neutral, timeElapsed = 0 }
+            Expect.equal initialModel
+                { timeValue = 0
+                , currentPose = Neutral
+                , timeElapsed = 0
+                , timerState = Stopped
+                , timerMode = Elapsed
+                }
 
 
 initialTimeText : Test
@@ -190,3 +196,14 @@ timerStarts =
                 |> Tuple.first
                 |> .timeElapsed
                 |> Expect.equal 1
+
+
+timerModeChanged : Test
+timerModeChanged =
+    test "Timer mode is changed to Elapsed" <|
+        \_ ->
+            initialModel
+                |> update ClickedTimerModeToggle
+                |> Tuple.first
+                |> .timerMode
+                |> Expect.equal Remaining
