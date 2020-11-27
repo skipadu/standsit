@@ -81,7 +81,7 @@ view model =
             [ currentTimeText model
             , div []
                 [ button [ Attr.id "toggleTimerMode", onClick ClickedTimerModeToggle ] [ text "Timer mode" ]
-                , button [ Attr.id "toggleTimerState", onClick ClickedTimerStateToggle ] [ text (timerStateText model.timerState) ]
+                , button [ Attr.id "toggleTimerState", onClick ClickedTimerStateToggle, Attr.disabled (model.timeValue == model.timeElapsed) ] [ text (timerStateText model.timerState) ]
                 ]
             ]
         , button [ Attr.id "startSitting", Attr.class "btn btn-pose", Attr.classList [ ( "current-pose", model.currentPose == Sit ) ], onClick (ClickedPose Sit) ] [ text "Sit" ]
