@@ -1,4 +1,4 @@
-module StandSit exposing (Model, Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, main, padLeadingZero, update, view)
+port module StandSit exposing (Model, Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, main, padLeadingZero, update, view)
 
 import Browser
 import Html exposing (Html, button, div, span, text)
@@ -117,6 +117,15 @@ initialModel =
     }
 
 
+type alias NotificationData =
+    { title : String
+    , body : String
+    }
+
+
+port showNotification : NotificationData -> Cmd msg
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -133,7 +142,7 @@ update msg model =
 
         Tick _ ->
             if model.timeElapsed >= model.timeValue && model.timeValue > 0 then
-                ( { model | timerState = Stopped }, Cmd.none )
+                ( { model | timerState = Stopped }, showNotification { title = "Time is up!", body = "Change your pose NOW!" } )
 
             else
                 ( { model | timeElapsed = model.timeElapsed + 1 }, Cmd.none )
