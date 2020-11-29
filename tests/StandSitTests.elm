@@ -1,6 +1,7 @@
 module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker, timerModeChanged, timerStarts, timerStateChanged)
 
 import Expect
+import Html.Styled exposing (toUnstyled)
 import StandSit exposing (Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, padLeadingZero, update, view)
 import Test exposing (Test, describe, test)
 import Test.Html.Event as Event
@@ -33,6 +34,7 @@ initialTimeText =
         \() ->
             initialModel
                 |> view
+                >> toUnstyled
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "timeText" ]
                 |> Query.has [ Selector.text "--:--" ]
@@ -66,6 +68,7 @@ startStandingClicked =
         \() ->
             initialModel
                 |> view
+                >> toUnstyled
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startStanding" ]
                 |> Event.simulate Event.click
@@ -78,6 +81,7 @@ startSittingClicked =
         \() ->
             initialModel
                 |> view
+                >> toUnstyled
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startSitting" ]
                 |> Event.simulate Event.click
@@ -106,6 +110,7 @@ standButtonCssClasses =
         \_ ->
             initialModel
                 |> view
+                >> toUnstyled
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startStanding" ]
                 |> Query.has [ Selector.classes [ "btn", "btn-pose" ] ]
@@ -117,6 +122,7 @@ sitButtonCssClasses =
         \_ ->
             initialModel
                 |> view
+                >> toUnstyled
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startSitting" ]
                 |> Query.has [ Selector.classes [ "btn", "btn-pose" ] ]
@@ -169,6 +175,7 @@ standButtonHasCssClassWhenCurrent =
                 |> update (ClickedPose Stand)
                 |> Tuple.first
                 |> view
+                >> toUnstyled
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startStanding" ]
                 |> Query.has [ Selector.class "current-pose" ]
@@ -182,6 +189,7 @@ sitButtonHasCssClassWhenCurrent =
                 |> update (ClickedPose Sit)
                 |> Tuple.first
                 |> view
+                >> toUnstyled
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startSitting" ]
                 |> Query.has [ Selector.class "current-pose" ]

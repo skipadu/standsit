@@ -1,9 +1,13 @@
 port module StandSit exposing (Model, Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, main, padLeadingZero, update, view)
 
+-- import Html.Events exposing (onClick)
+
 import Browser
-import Html exposing (Html, button, div, span, text)
-import Html.Attributes as Attr
-import Html.Events exposing (onClick)
+import Css exposing (..)
+import Html
+import Html.Styled exposing (..)
+import Html.Styled.Attributes as Attr exposing (css)
+import Html.Styled.Events exposing (onClick)
 import String exposing (padLeft)
 import Time
 
@@ -73,10 +77,48 @@ timerStateText timerState =
             "Stop"
 
 
+activePoseStyle : Style
+activePoseStyle =
+    Css.batch
+        [ color (rgb 250 250 250)
+        , after
+            [ position absolute
+            , borderRadius (px 2)
+            , boxShadow5 (px 0) (px 0) (px 0) (px 2) (rgb 211 121 112)
+            , border3 (px 0) solid (rgb 0 0 0)
+            ]
+        ]
+
+
+testStyle : Style
+testStyle =
+    Css.batch
+        [ backgroundColor (rgb 128 128 128)
+        ]
+
+
+cssStyles : List ( Style, Bool ) -> Attribute Msg
+cssStyles styles =
+    styles
+        |> List.filter Tuple.second
+        |> List.map Tuple.first
+        |> css
+
+
 view : Model -> Html Msg
 view model =
     div []
-        [ button [ Attr.id "startStanding", Attr.class "btn btn-pose", Attr.classList [ ( "current-pose", model.currentPose == Stand ) ], onClick (ClickedPose Stand) ] [ text "Stand" ]
+        [ button
+            [ Attr.id "startStanding"
+            , Attr.class "btn btn-pose"
+            , Attr.classList [ ( "current-pose", model.currentPose == Stand ) ]
+            , onClick (ClickedPose Stand)
+            , cssStyles
+                [ ( activePoseStyle, model.currentPose == Stand )
+                , ( testStyle, True )
+                ]
+            ]
+            [ text "Stand" ]
         , div [ Attr.id "timer" ]
             [ currentTimeText model
             , div []
@@ -176,7 +218,7 @@ main : Program () Model Msg
 main =
     Browser.element
         { init = \_ -> ( initialModel, Cmd.none )
-        , view = view
+        , view = view >> toUnstyled
         , update = update
         , subscriptions = subscriptions
         }
