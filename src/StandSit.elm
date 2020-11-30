@@ -77,32 +77,51 @@ timerStateText timerState =
             "Stop"
 
 
-activePoseStyle : Style
-activePoseStyle =
+buttonStyle : Style
+buttonStyle =
     Css.batch
-        [ color (rgb 250 250 250)
-        , after
-            [ position absolute
-            , borderRadius (px 2)
-            , boxShadow5 (px 0) (px 0) (px 0) (px 2) (rgb 211 121 112)
-            , border3 (px 0) solid (rgb 0 0 0)
+        [ borderRadius (px 2)
+        , backgroundColor (rgb 250 250 250)
+        , color (rgb 51 52 53)
+        , border3 (px 1) solid (rgb 51 52 53)
+        , padding4 (px 5) (px 20) (px 5) (px 20)
+        , fontFamily monospace
+        , focus
+            [ outline zero
+            , position relative
+            , after
+                [ property "content" "''"
+                , position absolute
+                , top (px -2)
+                , right (px -2)
+                , bottom (px -2)
+                , left (px -2)
+                , borderRadius (px 2)
+                , backgroundColor transparent
+                , border3 (px 0) solid (rgb 255 255 255)
+                , boxSizing borderBox
+                , boxShadow5 (px 0) (px 0) (px 0) (px 2) (rgb 92 155 200)
+                , zIndex (int 1000)
+                ]
             ]
         ]
 
 
-testStyle : Style
-testStyle =
+activePoseStyle : Style
+activePoseStyle =
     Css.batch
-        [ backgroundColor (rgb 128 128 128)
+        [ color (rgb 250 250 250)
+        , backgroundColor (rgb 51 52 53)
         ]
 
 
-cssStyles : List ( Style, Bool ) -> Attribute Msg
-cssStyles styles =
-    styles
-        |> List.filter Tuple.second
-        |> List.map Tuple.first
-        |> css
+conditionalCss : Style -> Bool -> Attribute msg
+conditionalCss style condition =
+    if condition then
+        css [ style ]
+
+    else
+        Attr.classList []
 
 
 view : Model -> Html Msg
@@ -110,23 +129,25 @@ view model =
     div []
         [ button
             [ Attr.id "startStanding"
-            , Attr.class "btn btn-pose"
-            , Attr.classList [ ( "current-pose", model.currentPose == Stand ) ]
             , onClick (ClickedPose Stand)
-            , cssStyles
-                [ ( activePoseStyle, model.currentPose == Stand )
-                , ( testStyle, True )
-                ]
+            , css [ buttonStyle ]
+            , conditionalCss activePoseStyle (model.currentPose == Stand)
             ]
             [ text "Stand" ]
         , div [ Attr.id "timer" ]
             [ currentTimeText model
             , div []
-                [ button [ Attr.id "toggleTimerMode", onClick ClickedTimerModeToggle ] [ text "Timer mode" ]
-                , button [ Attr.id "toggleTimerState", onClick ClickedTimerStateToggle, Attr.disabled (model.timeValue == model.timeElapsed) ] [ text (timerStateText model.timerState) ]
+                [ button [ Attr.id "toggleTimerMode", onClick ClickedTimerModeToggle, css [ buttonStyle ] ] [ text "Timer mode" ]
+                , button [ Attr.id "toggleTimerState", onClick ClickedTimerStateToggle, Attr.disabled (model.timeValue == model.timeElapsed), css [ buttonStyle ] ] [ text (timerStateText model.timerState) ]
                 ]
             ]
-        , button [ Attr.id "startSitting", Attr.class "btn btn-pose", Attr.classList [ ( "current-pose", model.currentPose == Sit ) ], onClick (ClickedPose Sit) ] [ text "Sit" ]
+        , button
+            [ Attr.id "startSitting"
+            , onClick (ClickedPose Sit)
+            , css [ buttonStyle ]
+            , conditionalCss activePoseStyle (model.currentPose == Sit)
+            ]
+            [ text "Sit" ]
         ]
 
 

@@ -1,4 +1,4 @@
-module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, poseButtonCssClasses, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker, timerModeChanged, timerStarts, timerStateChanged)
+module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker, timerModeChanged, timerStarts, timerStateChanged)
 
 import Expect
 import Html.Styled exposing (toUnstyled)
@@ -96,44 +96,11 @@ padLeadingZeros =
                 |> Expect.equal "05"
 
 
-poseButtonCssClasses : Test
-poseButtonCssClasses =
-    describe "Pose buttons have correct CSS classes"
-        [ standButtonCssClasses
-        , sitButtonCssClasses
-        ]
-
-
-standButtonCssClasses : Test
-standButtonCssClasses =
-    test "Stand button has correct CSS classes" <|
-        \_ ->
-            initialModel
-                |> view
-                >> toUnstyled
-                |> Query.fromHtml
-                |> Query.find [ Selector.id "startStanding" ]
-                |> Query.has [ Selector.classes [ "btn", "btn-pose" ] ]
-
-
-sitButtonCssClasses : Test
-sitButtonCssClasses =
-    test "Sit button has correct CSS classes" <|
-        \_ ->
-            initialModel
-                |> view
-                >> toUnstyled
-                |> Query.fromHtml
-                |> Query.find [ Selector.id "startSitting" ]
-                |> Query.has [ Selector.classes [ "btn", "btn-pose" ] ]
-
-
 changingPoses : Test
 changingPoses =
     describe "Changing poses will update the model"
         [ changePoseToStand
         , changePoseToSit
-        , currentPoseButtonHasCssClass
         ]
 
 
@@ -157,42 +124,6 @@ changePoseToSit =
                 |> Tuple.first
                 |> .currentPose
                 |> Expect.equal Sit
-
-
-currentPoseButtonHasCssClass : Test
-currentPoseButtonHasCssClass =
-    describe "Pose button which is current one, has wanted CSS class"
-        [ standButtonHasCssClassWhenCurrent
-        , sitButtonHasCssClassWhenCurrent
-        ]
-
-
-standButtonHasCssClassWhenCurrent : Test
-standButtonHasCssClassWhenCurrent =
-    test "Stand button has the CSS class when it is current pose" <|
-        \_ ->
-            initialModel
-                |> update (ClickedPose Stand)
-                |> Tuple.first
-                |> view
-                >> toUnstyled
-                |> Query.fromHtml
-                |> Query.find [ Selector.id "startStanding" ]
-                |> Query.has [ Selector.class "current-pose" ]
-
-
-sitButtonHasCssClassWhenCurrent : Test
-sitButtonHasCssClassWhenCurrent =
-    test "Sit button has the CSS class when it is current pose" <|
-        \_ ->
-            initialModel
-                |> update (ClickedPose Sit)
-                |> Tuple.first
-                |> view
-                >> toUnstyled
-                |> Query.fromHtml
-                |> Query.find [ Selector.id "startSitting" ]
-                |> Query.has [ Selector.class "current-pose" ]
 
 
 timerStarts : Test
