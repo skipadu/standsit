@@ -64,7 +64,7 @@ currentTimeText model =
             else
                 minutes ++ ":" ++ remainingSeconds
     in
-    span [ Attr.id "timeText" ] [ text timeText ]
+    span [ Attr.id "timeText", css [ Css.batch [ textAlign center, fontFamily monospace ] ] ] [ text timeText ]
 
 
 timerStateText : TimerState -> String
@@ -80,10 +80,14 @@ timerStateText timerState =
 buttonStyle : Style
 buttonStyle =
     Css.batch
-        [ borderRadius (px 2)
+        [ displayFlex
+        , justifyContent center
+        , alignItems center
+        , borderRadius (px 2)
         , backgroundColor (rgb 250 250 250)
         , color (rgb 51 52 53)
         , border3 (px 1) solid (rgb 51 52 53)
+        , margin (px 2)
         , padding4 (px 5) (px 20) (px 5) (px 20)
         , fontFamily monospace
         , focus
@@ -126,7 +130,15 @@ conditionalCss style condition =
 
 view : Model -> Html Msg
 view model =
-    div []
+    div
+        [ css
+            [ Css.batch
+                [ displayFlex
+                , justifyContent center
+                , margin (px 20)
+                ]
+            ]
+        ]
         [ button
             [ Attr.id "startStanding"
             , onClick (ClickedPose Stand)
@@ -134,11 +146,28 @@ view model =
             , conditionalCss activePoseStyle (model.currentPose == Stand)
             ]
             [ text "Stand" ]
-        , div [ Attr.id "timer" ]
+        , div
+            [ Attr.id "timer"
+            , css
+                [ Css.batch
+                    [ displayFlex
+                    , flexDirection column
+                    , padding (px 5)
+                    ]
+                ]
+            ]
             [ currentTimeText model
-            , div []
-                [ button [ Attr.id "toggleTimerMode", onClick ClickedTimerModeToggle, css [ buttonStyle ] ] [ text "Timer mode" ]
-                , button [ Attr.id "toggleTimerState", onClick ClickedTimerStateToggle, Attr.disabled (model.timeValue == model.timeElapsed), css [ buttonStyle ] ] [ text (timerStateText model.timerState) ]
+            , div
+                [ css
+                    [ Css.batch
+                        [ displayFlex
+                        , flexWrap wrap
+                        , justifyContent center
+                        ]
+                    ]
+                ]
+                [ button [ Attr.id "toggleTimerMode", onClick ClickedTimerModeToggle, css [ buttonStyle, flex (num 1) ] ] [ text "Timer mode" ]
+                , button [ Attr.id "toggleTimerState", onClick ClickedTimerStateToggle, Attr.disabled (model.timeValue == model.timeElapsed), css [ buttonStyle, flex (num 1) ] ] [ text (timerStateText model.timerState) ]
                 ]
             ]
         , button
