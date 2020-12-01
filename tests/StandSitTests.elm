@@ -1,4 +1,4 @@
-module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker, timerModeChanged, timerStarts, timerStateChanged)
+module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker, timerModeChanged, timerStarts, timerStateChangedRunning)
 
 import Expect
 import Html.Styled exposing (toUnstyled)
@@ -148,12 +148,12 @@ timerModeChanged =
                 |> Expect.equal Remaining
 
 
-timerStateChanged : Test
-timerStateChanged =
+timerStateChangedRunning : Test
+timerStateChangedRunning =
     test "Timer state is changed to Running from default Stopped" <|
         \_ ->
             initialModel
-                |> update ClickedTimerStateToggle
+                |> update (ClickedTimerState Running)
                 |> Tuple.first
                 |> .timerState
                 |> Expect.equal Running

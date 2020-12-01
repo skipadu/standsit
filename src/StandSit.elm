@@ -22,7 +22,7 @@ type Msg
     = ClickedPose Pose
     | Tick Time.Posix
     | ClickedTimerModeToggle
-    | ClickedTimerStateToggle
+    | ClickedTimerState TimerState
 
 
 padLeadingZero : Int -> String
@@ -67,16 +67,6 @@ currentTimeText model =
     span [ Attr.id "timeText", css [ Css.batch [ textAlign center, fontFamily monospace ] ] ] [ text timeText ]
 
 
-timerStateText : TimerState -> String
-timerStateText timerState =
-    case timerState of
-        Stopped ->
-            "Continue"
-
-        Running ->
-            "Stop"
-
-
 buttonStyle : Style
 buttonStyle =
     Css.batch
@@ -107,6 +97,10 @@ buttonStyle =
                 , boxShadow5 (px 0) (px 0) (px 0) (px 2) (rgb 92 155 200)
                 , zIndex (int 1000)
                 ]
+            ]
+        , disabled
+            [ color (rgb 128 128 128)
+            , borderColor (rgb 128 128 128)
             ]
         ]
 
@@ -167,7 +161,10 @@ view model =
                     ]
                 ]
                 [ button [ Attr.id "toggleTimerMode", onClick ClickedTimerModeToggle, css [ buttonStyle, flex (num 1) ] ] [ text "Timer mode" ]
-                , button [ Attr.id "toggleTimerState", onClick ClickedTimerStateToggle, Attr.disabled (model.timeValue == model.timeElapsed), css [ buttonStyle, flex (num 1) ] ] [ text (timerStateText model.timerState) ]
+                , div [ css [ displayFlex, flexDirection row, flex (num 1) ] ]
+                    [ button [ Attr.id "stopTimer", onClick (ClickedTimerState Stopped), Attr.disabled (model.timerState == Stopped), css [ buttonStyle, flex (num 1) ] ] [ text "Stop" ]
+                    , button [ Attr.id "continueTimer", onClick (ClickedTimerState Running), Attr.disabled (model.timeValue == model.timeElapsed || model.timerState == Running), css [ buttonStyle, flex (num 1) ] ] [ text "Continue" ]
+                    ]
                 ]
             ]
         , button
@@ -251,17 +248,8 @@ update msg model =
             in
             ( { model | timerMode = newTimerMode }, Cmd.none )
 
-        ClickedTimerStateToggle ->
-            let
-                newTimerState =
-                    case model.timerState of
-                        Running ->
-                            Stopped
-
-                        Stopped ->
-                            Running
-            in
-            ( { model | timerState = newTimerState }, Cmd.none )
+        ClickedTimerState timerState ->
+            ( { model | timerState = timerState }, Cmd.none )
 
 
 main : Program () Model Msg
