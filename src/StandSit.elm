@@ -1,10 +1,7 @@
 port module StandSit exposing (Model, Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, main, padLeadingZero, update, view)
 
--- import Html.Events exposing (onClick)
-
 import Browser
 import Css exposing (..)
-import Html
 import Html.Styled exposing (..)
 import Html.Styled.Attributes as Attr exposing (css)
 import Html.Styled.Events exposing (onClick)
