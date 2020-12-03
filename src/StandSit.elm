@@ -64,7 +64,7 @@ currentTimeText model =
             else
                 minutes ++ ":" ++ remainingSeconds
     in
-    span [ Attr.id "timeText", css [ Css.batch [ textAlign center, fontFamily monospace, fontSize (Css.em 1.5) ] ] ] [ text timeText ]
+    span [ Attr.id "timeText", css [ textAlign center, fontFamily monospace, fontSize (Css.em 1.5) ] ] [ text timeText ]
 
 
 buttonStyle : Style
@@ -126,11 +126,9 @@ view : Model -> Html Msg
 view model =
     div
         [ css
-            [ Css.batch
-                [ displayFlex
-                , justifyContent center
-                , margin (px 20)
-                ]
+            [ displayFlex
+            , justifyContent center
+            , margin (px 20)
             ]
         ]
         [ button
@@ -143,22 +141,18 @@ view model =
         , div
             [ Attr.id "timer"
             , css
-                [ Css.batch
-                    [ displayFlex
-                    , flexDirection column
-                    , padding (px 5)
-                    ]
+                [ displayFlex
+                , flexDirection column
+                , padding (px 5)
                 ]
             ]
             [ currentTimeText model
             , div
                 [ css
-                    [ Css.batch
-                        [ displayFlex
-                        , flexWrap wrap
-                        , justifyContent center
-                        , flexDirection column
-                        ]
+                    [ displayFlex
+                    , flexWrap wrap
+                    , justifyContent center
+                    , flexDirection column
                     ]
                 ]
                 [ button [ Attr.id "toggleTimerMode", onClick ClickedTimerModeToggle, css [ buttonStyle, flex (num 1) ] ] [ text "Timer mode" ]
