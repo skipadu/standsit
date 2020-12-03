@@ -1,8 +1,8 @@
 port module StandSit exposing (Model, Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, main, padLeadingZero, update, view)
 
 import Browser
-import Css exposing (..)
-import Html.Styled exposing (..)
+import Css exposing (Style, absolute, after, alignItems, backgroundColor, border3, borderBox, borderColor, borderRadius, bottom, boxShadow5, boxSizing, center, color, column, disabled, displayFlex, flex, flexDirection, flexWrap, focus, fontFamily, fontSize, int, justifyContent, left, margin, monospace, num, outline, padding, padding4, position, property, px, relative, rgb, right, row, solid, textAlign, top, transparent, wrap, zIndex, zero)
+import Html.Styled exposing (Attribute, Html, button, div, span, text, toUnstyled)
 import Html.Styled.Attributes as Attr exposing (css)
 import Html.Styled.Events exposing (onClick)
 import String exposing (padLeft)
