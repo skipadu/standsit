@@ -157,6 +157,7 @@ view model =
                         [ displayFlex
                         , flexWrap wrap
                         , justifyContent center
+                        , flexDirection column
                         ]
                     ]
                 ]
