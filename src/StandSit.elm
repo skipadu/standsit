@@ -155,10 +155,36 @@ view model =
                     , flexDirection column
                     ]
                 ]
-                [ button [ Attr.id "toggleTimerMode", onClick ClickedTimerModeToggle, css [ buttonStyle, flex (num 1) ] ] [ text "Timer mode" ]
+                [ button
+                    [ Attr.id "toggleTimerMode"
+                    , onClick ClickedTimerModeToggle
+                    , css
+                        [ buttonStyle
+                        , flex (num 1)
+                        ]
+                    ]
+                    [ text "Timer mode" ]
                 , div [ css [ displayFlex, flexDirection row, flex (num 1) ] ]
-                    [ button [ Attr.id "stopTimer", onClick (ClickedTimerState Stopped), Attr.disabled (model.timerState == Stopped), css [ buttonStyle, flex (num 1) ] ] [ text "Stop" ]
-                    , button [ Attr.id "continueTimer", onClick (ClickedTimerState Running), Attr.disabled (model.timeValue == model.timeElapsed || model.timerState == Running), css [ buttonStyle, flex (num 1) ] ] [ text "Continue" ]
+                    [ button
+                        [ Attr.id "stopTimer"
+                        , onClick (ClickedTimerState Stopped)
+                        , Attr.disabled (model.timerState == Stopped)
+                        , css
+                            [ buttonStyle
+                            , flex (num 1)
+                            ]
+                        ]
+                        [ text "Stop" ]
+                    , button
+                        [ Attr.id "continueTimer"
+                        , onClick (ClickedTimerState Running)
+                        , Attr.disabled (model.timeValue == model.timeElapsed || model.timerState == Running)
+                        , css
+                            [ buttonStyle
+                            , flex (num 1)
+                            ]
+                        ]
+                        [ text "Continue" ]
                     ]
                 ]
             ]
