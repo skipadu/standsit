@@ -64,7 +64,7 @@ currentTimeText model =
             else
                 minutes ++ ":" ++ remainingSeconds
     in
-    span [ Attr.id "timeText", css [ Css.batch [ textAlign center, fontFamily monospace ] ] ] [ text timeText ]
+    span [ Attr.id "timeText", css [ Css.batch [ textAlign center, fontFamily monospace, fontSize (Css.em 1.5) ] ] ] [ text timeText ]
 
 
 buttonStyle : Style
