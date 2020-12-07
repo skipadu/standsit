@@ -7,15 +7,21 @@ function showNotification(data) {
     alert("This browser does not support desktop notification");
   }
 
-  else if (Notification.permission === "granted") {
+  if (requestNotificationPermission()) {
     createNotification(data.title, data.body);
   }
+}
 
-  else if (Notification.permission !== "denied") {
+function requestNotificationPermission() {
+  if (Notification.permission !== "denied") {
     Notification.requestPermission().then(function (permission) {
       if (permission === "granted") {
-        createNotification(data.title, data.body);
+        return true;
+      }
+      else {
+        return false;
       }
     });
   }
+  return true;
 }
