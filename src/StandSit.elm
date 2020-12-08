@@ -9,6 +9,11 @@ import String exposing (padLeft)
 import Time
 
 
+appVersion : String
+appVersion =
+    "1.0.0"
+
+
 type Pose
     = Stand
     | Neutral
@@ -119,80 +124,84 @@ conditionalCss style condition =
         Attr.classList []
 
 
-view : Model -> Html Msg
+view : Model -> Document Msg
 view model =
-    div
-        [ css
-            [ displayFlex
-            , justifyContent center
-            , margin (px 20)
-            ]
-        ]
-        [ button
-            [ Attr.id "startStanding"
-            , onClick (ClickedPose Stand)
-            , css [ buttonStyle ]
-            , conditionalCss activePoseStyle (model.currentPose == Stand)
-            ]
-            [ text "Stand" ]
-        , div
-            [ Attr.id "timer"
-            , css
+    { title = "Stand and Sit v" ++ appVersion
+    , body =
+        [ div
+            [ css
                 [ displayFlex
-                , flexDirection column
-                , padding (px 5)
+                , justifyContent center
+                , margin (px 20)
                 ]
             ]
-            [ currentTimeText model
+            [ button
+                [ Attr.id "startStanding"
+                , onClick (ClickedPose Stand)
+                , css [ buttonStyle ]
+                , conditionalCss activePoseStyle (model.currentPose == Stand)
+                ]
+                [ text "Stand" ]
             , div
-                [ css
+                [ Attr.id "timer"
+                , css
                     [ displayFlex
-                    , flexWrap wrap
-                    , justifyContent center
                     , flexDirection column
+                    , padding (px 5)
                     ]
                 ]
-                [ button
-                    [ Attr.id "toggleTimerMode"
-                    , onClick ClickedTimerModeToggle
-                    , css
-                        [ buttonStyle
-                        , flex (num 1)
+                [ currentTimeText model
+                , div
+                    [ css
+                        [ displayFlex
+                        , flexWrap wrap
+                        , justifyContent center
+                        , flexDirection column
                         ]
                     ]
-                    [ text "Timer mode" ]
-                , div [ css [ displayFlex, flexDirection row, flex (num 1) ] ]
                     [ button
-                        [ Attr.id "stopTimer"
-                        , onClick (ClickedTimerState Stopped)
-                        , Attr.disabled (model.timerState == Stopped)
+                        [ Attr.id "toggleTimerMode"
+                        , onClick ClickedTimerModeToggle
                         , css
                             [ buttonStyle
                             , flex (num 1)
                             ]
                         ]
-                        [ text "Stop" ]
-                    , button
-                        [ Attr.id "continueTimer"
-                        , onClick (ClickedTimerState Running)
-                        , Attr.disabled (model.timeValue == model.timeElapsed || model.timerState == Running)
-                        , css
-                            [ buttonStyle
-                            , flex (num 1)
+                        [ text "Timer mode" ]
+                    , div [ css [ displayFlex, flexDirection row, flex (num 1) ] ]
+                        [ button
+                            [ Attr.id "stopTimer"
+                            , onClick (ClickedTimerState Stopped)
+                            , Attr.disabled (model.timerState == Stopped)
+                            , css
+                                [ buttonStyle
+                                , flex (num 1)
+                                ]
                             ]
+                            [ text "Stop" ]
+                        , button
+                            [ Attr.id "continueTimer"
+                            , onClick (ClickedTimerState Running)
+                            , Attr.disabled (model.timeValue == model.timeElapsed || model.timerState == Running)
+                            , css
+                                [ buttonStyle
+                                , flex (num 1)
+                                ]
+                            ]
+                            [ text "Continue" ]
                         ]
-                        [ text "Continue" ]
                     ]
                 ]
+            , button
+                [ Attr.id "startSitting"
+                , onClick (ClickedPose Sit)
+                , css [ buttonStyle ]
+                , conditionalCss activePoseStyle (model.currentPose == Sit)
+                ]
+                [ text "Sit" ]
             ]
-        , button
-            [ Attr.id "startSitting"
-            , onClick (ClickedPose Sit)
-            , css [ buttonStyle ]
-            , conditionalCss activePoseStyle (model.currentPose == Sit)
-            ]
-            [ text "Sit" ]
         ]
+    }
 
 
 type TimerState
@@ -270,11 +279,24 @@ update msg model =
             ( { model | timerState = timerState }, Cmd.none )
 
 
+type alias Document msg =
+    { title : String
+    , body : List (Html msg)
+    }
+
+
+toUnstyledDocument : Document msg -> Browser.Document msg
+toUnstyledDocument doc =
+    { title = doc.title
+    , body = List.map toUnstyled doc.body
+    }
+
+
 main : Program () Model Msg
 main =
-    Browser.element
+    Browser.document
         { init = \_ -> ( initialModel, Cmd.none )
-        , view = view >> toUnstyled
+        , view = view >> toUnstyledDocument
         , update = update
         , subscriptions = subscriptions
         }

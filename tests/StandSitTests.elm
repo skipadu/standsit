@@ -1,7 +1,7 @@
 module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker, timerModeChanged, timerStarts, timerStateChangedRunning)
 
 import Expect
-import Html.Styled exposing (toUnstyled)
+import Html.Styled exposing (div, toUnstyled)
 import StandSit exposing (Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, padLeadingZero, update, view)
 import Test exposing (Test, describe, test)
 import Test.Html.Event as Event
@@ -33,8 +33,8 @@ initialTimeText =
     test "At first, the time is --:--" <|
         \() ->
             initialModel
-                |> view
-                >> toUnstyled
+                |> (div [] << .body << view)
+                |> toUnstyled
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "timeText" ]
                 |> Query.has [ Selector.text "--:--" ]
@@ -67,7 +67,7 @@ startStandingClicked =
     test "Standing pose event called" <|
         \() ->
             initialModel
-                |> view
+                |> (div [] << .body << view)
                 >> toUnstyled
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startStanding" ]
@@ -80,7 +80,7 @@ startSittingClicked =
     test "Sitting pose event called" <|
         \() ->
             initialModel
-                |> view
+                |> (div [] << .body << view)
                 >> toUnstyled
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startSitting" ]
