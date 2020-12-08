@@ -1,8 +1,9 @@
 module StandSitTests exposing (changingPoses, initialModelContents, initialTimeText, padLeadingZeros, sittingTimeText, standingTimeText, startSittingClicked, startStandingClicked, testChecker, timerModeChanged, timerStarts, timerStateChangedRunning)
 
 import Expect
+import Html
 import Html.Styled exposing (div, toUnstyled)
-import StandSit exposing (Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, padLeadingZero, update, view)
+import StandSit exposing (Document, Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, padLeadingZero, update, view)
 import Test exposing (Test, describe, test)
 import Test.Html.Event as Event
 import Test.Html.Query as Query
@@ -28,13 +29,21 @@ initialModelContents =
                 }
 
 
+documentToUnstyledDiv : Document Msg -> Html.Html Msg
+documentToUnstyledDiv doc =
+    doc
+        |> .body
+        |> div []
+        |> toUnstyled
+
+
 initialTimeText : Test
 initialTimeText =
     test "At first, the time is --:--" <|
         \() ->
             initialModel
-                |> (div [] << .body << view)
-                |> toUnstyled
+                |> view
+                |> documentToUnstyledDiv
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "timeText" ]
                 |> Query.has [ Selector.text "--:--" ]
@@ -67,8 +76,8 @@ startStandingClicked =
     test "Standing pose event called" <|
         \() ->
             initialModel
-                |> (div [] << .body << view)
-                >> toUnstyled
+                |> view
+                |> documentToUnstyledDiv
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startStanding" ]
                 |> Event.simulate Event.click
@@ -80,8 +89,8 @@ startSittingClicked =
     test "Sitting pose event called" <|
         \() ->
             initialModel
-                |> (div [] << .body << view)
-                >> toUnstyled
+                |> view
+                |> documentToUnstyledDiv
                 |> Query.fromHtml
                 |> Query.find [ Selector.id "startSitting" ]
                 |> Event.simulate Event.click

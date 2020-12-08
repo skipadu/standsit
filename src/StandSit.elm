@@ -1,4 +1,4 @@
-port module StandSit exposing (Model, Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, main, padLeadingZero, update, view)
+port module StandSit exposing (Document, Model, Msg(..), Pose(..), TimerMode(..), TimerState(..), initialModel, main, padLeadingZero, update, view)
 
 import Browser
 import Css exposing (Style, absolute, after, alignItems, backgroundColor, border3, borderBox, borderColor, borderRadius, bottom, boxShadow5, boxSizing, center, color, column, disabled, displayFlex, flex, flexDirection, flexWrap, focus, fontFamily, fontSize, int, justifyContent, left, margin, monospace, num, outline, padding, padding4, position, property, px, relative, rgb, right, row, solid, textAlign, top, transparent, wrap, zIndex, zero)
